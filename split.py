@@ -22,9 +22,9 @@ def main(path, TRAINPERC, VALIDPERC):
       valid=open(join(path, VALIDFILE),'w')
       test=open(join(path, TESTFILE),'w')
 
-      count=len(data)
-      cumlvalid=int(TRAINPERC*count)
-      cumltest=cumlvalid+int(VALIDPERC*count)
+      count=len(data) # number of images
+      cumlvalid=int(TRAINPERC*count) # number of training images
+      cumltest=cumlvalid+int(VALIDPERC*count) # no. of training + validation images
 
       print("Total records = %d" % count)
       print("Train %d%% = %d" % (round(TRAINPERC*100), cumlvalid) )
