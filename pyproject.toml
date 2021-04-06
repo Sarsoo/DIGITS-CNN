@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "digits-cnn"
+version = "0.1.0"
+description = ""
+authors = ["andy <andy@sarsoo.xyz>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^1.20.2"
+matplotlib = "^3.4.1"
+jupyterlab = "^3.0.12"
+pandas = "^1.2.3"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
