@@ -330,19 +330,6 @@ Epochs/learning rate/momentum?
 Network Architectures
 \end_layout
 
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-LeNet?/AlexNet/GoogLeNet/VGGNet
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsubsection
 Convolutional Layers
 \end_layout
