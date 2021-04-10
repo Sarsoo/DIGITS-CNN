@@ -293,27 +293,6 @@ Dataset
 \end_layout
 
 \begin_layout Subsection
-Network Architectures
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-LeNet?/AlexNet/GoogLeNet/VGGNet
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Non-Linearity
-\end_layout
-
-\begin_layout Subsection
 Dataset Processing
 \end_layout
 
@@ -345,6 +324,46 @@ Epochs/learning rate/momentum?
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Network Architectures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+LeNet?/AlexNet/GoogLeNet/VGGNet
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Convolutional Layers
+\end_layout
+
+\begin_layout Subsubsection
+Fully-Connected Layers
+\end_layout
+
+\begin_layout Standard
+The final two layers of AlexNet are dense or fully-connected layers and
+ provide two key features in image classification.
+ The first is flattening the 2D cross-section of the preceding convolutional
+ layers into a 1D representation for propagation to a final one-hot vector
+ output.
+ The second is as a traditional multi-layer perceptron classifier, taking
+ the high-level visual insights of the later convolutional layers and reasoning
+ these into a final classification.
+\end_layout
+
+\begin_layout Subsubsection
+Non-Linearity
 \end_layout
 
 \begin_layout Section

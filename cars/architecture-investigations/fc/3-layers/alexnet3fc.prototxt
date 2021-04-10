@@ -367,13 +367,58 @@ layer {
 }
 
 ################
+#   DENSE 2.5
+################
+
+layer {
+  name: "fc7.5"
+  type: "InnerProduct"
+  bottom: "fc7"
+  top: "fc7.5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "gaussian"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7.5"
+  type: "ReLU"
+  bottom: "fc7.5"
+  top: "fc7.5"
+}
+layer {
+  name: "drop7.5"
+  type: "Dropout"
+  bottom: "fc7.5"
+  top: "fc7.5"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+
+################
 #    OUTPUT
 ################
 
 layer {
   name: "fc8"
   type: "InnerProduct"
-  bottom: "fc7"
+  bottom: "fc7.5"
   top: "fc8"
   param {
     lr_mult: 1
