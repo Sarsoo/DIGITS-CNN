@@ -21,7 +21,7 @@ minimalistic
 todonotes
 \end_modules
 \maintain_unincluded_children false
-\language british
+\language english
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -97,7 +97,7 @@ todonotes
 \defskip medskip
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style british
+\quotes_style english
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -275,8 +275,75 @@ setcounter{page}{1}
 Introduction
 \end_layout
 
+\begin_layout Standard
+Although much of the theory for convolutional neural networks (CNNs) was
+ developed throughout the 20th century, their importance to the field of
+ computer vision was not widely appreciated until the early 2010s.
+ 
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+More context
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Although CNNs can appear opaque when attempting to understand how decisions
+ are made, they are not black boxes and there are many ways to affect a
+ model's perfomance.
+ This work presents investigations into how a CNN's performance is affected
+ by the subject dataset, the architecture of the network and the parameters
+ used when training.
+ Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Investigations-Scope"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ outlines the scope of the investigations made herein, describing the motivation
+ for the variations and expectations as to how this would affect performance.
+ The results for these investigations are presented in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with interpretations made in the following section.
+ Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Conclusions"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ summarises and concludes the work.
+\end_layout
+
 \begin_layout Section
 Investigations Scope
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Investigations-Scope"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -339,30 +406,78 @@ Fully-Connected Layers
 \end_layout
 
 \begin_layout Standard
-The final two layers of AlexNet are dense or fully-connected layers and
- provide two key features in image classification.
+Following the convolutional stages there are three dense or fully-connected
+ layers which provide two key features in image classification.
  The first is flattening the 2D cross-section of the preceding convolutional
  layers into a 1D representation for propagation to a final one-hot vector
  output.
  The second is as a traditional multi-layer perceptron classifier, taking
  the high-level visual insights of the later convolutional layers and reasoning
  these into a final classification.
+ When treated as an MLP, these can instead be considered as 2 hidden layers
+ and a single output layer.
+ The reason for designating the last layer separately is the level to which
+ it is fixed when varying the classifier as a whole.
+ The number of neurons in this layer remains equal to the number of classes
+ in the dataset in order to form a one-hot vector output when the network
+ makes a classification.
 \end_layout
 
 \begin_layout Subsubsection
 Non-Linearity
 \end_layout
 
+\begin_layout Standard
+The inclusion of non-linear layers throughout AlexNet is critical to it's
+ ability to learn complex insights into a dataset.
+ Convolution as a mathematical operation can be proven to be associative
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+Fubini's theorem
+\end_layout
+
+\end_inset
+
+ in a similar fashion to multiplication.
+ This means that consecutive convolutions can be collapsed into a single
+ operation, for example multiple filters can be merged into a single compound
+ operation for less expensive application to an image.
+ 
+\end_layout
+
 \begin_layout Section
 Results
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Results"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Discussion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Discussion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Conclusions
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusions"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
