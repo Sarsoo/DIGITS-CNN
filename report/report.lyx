@@ -21,7 +21,7 @@ minimalistic
 todonotes
 \end_modules
 \maintain_unincluded_children false
-\language english
+\language british
 \language_package default
 \inputencoding auto
 \fontencoding global
@@ -97,7 +97,7 @@ todonotes
 \defskip medskip
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style english
+\quotes_style british
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -295,7 +295,7 @@ More context
 \begin_layout Standard
 Although CNNs can appear opaque when attempting to understand how decisions
  are made, they are not black boxes and there are many ways to affect a
- model's perfomance.
+ model's performance.
  This work presents investigations into how a CNN's performance is affected
  by the subject dataset, the architecture of the network and the parameters
  used when training.
