@@ -347,16 +347,25 @@ name "sec:Investigations-Scope"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Dataset
-\end_layout
+The investigations presented in this work use the Stanford Cars dataset
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cars"
+literal "false"
 
 \end_inset
 
+, a selection of 16,185 images of 196 different classes of car.
+ In terms of network architecture, the seminal AlexNet 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alexnet"
+literal "false"
 
+\end_inset
+
+ was used as the template for the investigations presented.
 \end_layout
 
 \begin_layout Subsection
@@ -364,16 +373,25 @@ Dataset Processing
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Mean shift/whitening/augmentation
+Prior to more in-depth investigations, how the dataset is divided into training,
+ validation and test data was investigated in order to identify a suitable
+ proportion for later work.
+ As a fixed size dataset, a balance must be struck between how much is reserved
+ for training the network and how much should be used to evaluate the network.
+ Throughout this paper, the term 
+\emph on
+split
+\emph default
+ will be used to denote a single division of the dataset into the three
+ required subsets.
 \end_layout
 
-\end_inset
-
-
+\begin_layout Standard
+Although the dataset is of a fixed size, there are methods to artificially
+ grow the training images by performing image manipulations such as rotations
+ and zooms.
+ This attempts to teach the network to learn invariance to such transforms
+ during classification.
 \end_layout
 
 \begin_layout Subsection
@@ -458,6 +476,861 @@ name "sec:Results"
 
 \end_layout
 
+\begin_layout Subsection
+Dataset
+\end_layout
+
+\begin_layout Subsubsection
+Train/Validation/Test Proportions
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/split-investigations/split-barh.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Top-1 and Top-5 test accuracy for different train/validation/test proportions
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:split-barh"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Different splits of the cars dataset were made, the test accuracies can
+ be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:split-barh"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and the number of images in each subset can be seen in appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Dataset-Image-Counts"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ A fixed learning rate of 0.001 was used over 100 epochs.
+ Increasing the proportion of data reserved for training the model can be
+ seen to increase the classification accuracy while varying the proportion
+ between the test and validation split has little effect.
+ The 80/10/10 split was deemed an appropriate balance in proportion and
+ , unless otherwise stated, the 80/10/10 split is used for later experiments.
+\end_layout
+
+\begin_layout Subsubsection
+Data Augmentation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/data-aug-investigations/rot-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Batch size = 128, AlexNet's default
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rot-128b"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/data-aug-investigations/rot-accuracy-256batch.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Batch size = 256
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rot-256b"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different rotation degrees when augmenting the training
+ set
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rot-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/data-aug-investigations/best-barh.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Batch size = 128
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/data-aug-investigations/best-barh-256batch.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Batch size = 
+\begin_inset Formula $128E$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Best top-1 and Top-5 test accuracies for different data augmentation methods
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:data-aug-best-barh"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Meta-Parameters
+\end_layout
+
+\begin_layout Subsubsection
+Fixed Learning Rate
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/fixed-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fixed-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/fixed-loss.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Final validation loss
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fixed-loss"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Fixed learning schedules results over 100 epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fixed-results"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In order to evaluate different learning rates and learning schedules, initial
+ investigations were made across six decades of a fixed learning rate over
+ 100 epochs.
+ The accuracies and final validation loss can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:fixed-results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ For a fixed learning rate, values between 0.01 and 0.001 gave the best accuracy
+ with values both larger or smaller giving a top-1 accuracy less than 10%.
+ The final validation loss can be seen to generally follow the inverse trend,
+ the lowest values lie between 0.01 and 0.001.
+ Interestingly, a learning rate of 
+\begin_inset Formula $1\times10^{-4}$
+\end_inset
+
+ had a validation loss that somewhat interpolated the surrounding values
+ for 
+\begin_inset Formula $1\times10^{-5}$
+\end_inset
+
+ and 
+\begin_inset Formula $1\times10^{-3}$
+\end_inset
+
+ however the accuracy does not reflect this, instead being much lower at
+ 2%.
+\begin_inset Flex TODO Note (Margin)
+status open
+
+\begin_layout Plain Layout
+reword?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Step-Down
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/step-down-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different step-down learning schedules over 100 epochs.
+ Step of 1/3 for 2 learning rate drops
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:step-down-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Exponential
+\end_layout
+
+\begin_layout Standard
+Different exponential learning decay rates were investigated, the results
+ can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:exp-results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ From these results, a slow decay rate can be seen to give the best results,
+ values between 0.95 and 0.99 gave the highest accuracies.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/exp-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:exp-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/exp-loss.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Final validation loss
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:exp-loss"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different exponentially decaying learning schedules
+ over 100 epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:exp-results"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Sigmoid
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/sig-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different sigmoid learning schedules over 100 epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:sig-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/best-barh.png
+	lyxscale 30
+	width 60col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Best top-1 and Top-5 test accuracies for different learning schedules over
+ 100 epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:lr-best-barh"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Network Architectures
+\end_layout
+
+\begin_layout Subsubsection
+Convolutional Kernel Size
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/architecture-investigations/kernel-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Top-1 test accuracy for different convolutional kernel sizes over 100 epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:kernel-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Fully-Connected Layers
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/architecture-investigations/fc-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Top-1 test accuracy for different fully-connected layer shapes over 100
+ epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fc-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Discussion
 \begin_inset CommandInset label
@@ -467,6 +1340,22 @@ name "sec:Discussion"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Dataset
+\end_layout
+
+\begin_layout Standard
+Although the 
+\end_layout
+
+\begin_layout Subsection
+Meta-Parameters
+\end_layout
+
+\begin_layout Subsection
+Network Architectures
 \end_layout
 
 \begin_layout Section
@@ -504,18 +1393,328 @@ options "bibtotoc"
 \end_inset
 
 
-\begin_inset Newpage pagebreak
+\end_layout
+
+\begin_layout Section
+\start_of_appendix
+Dataset Image Counts
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Dataset-Image-Counts"
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Section
-\start_of_appendix
-Source Code
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Number of Images
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Split
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Training
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Validation
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Test
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90/5/5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+14,566
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+809
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+810
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+80/10/10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+12,948
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1,618
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1,619
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+70/15/15
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+11,329
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2,427
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2,429
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50/25/25
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8,092
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4,046
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4,047
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50/5/45
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8,092
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+809
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7,284
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Number of images in each subset for each evaluated split
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Code"
+name "tab:split-image-counts"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
