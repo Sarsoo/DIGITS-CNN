@@ -11,8 +11,11 @@
 \pagenumbering{roman}
 
 \usepackage{color}
+\usepackage{pxfonts}
 
 \definecolor{commentgreen}{RGB}{0,94,11}
+\definecolor{darkblue}{rgb}{0,0,0.75}
+\definecolor{darkred}{rgb}{0.6,0,0}
 \end_preamble
 \use_default_options true
 \begin_modules
@@ -102,6 +105,7 @@ todonotes
 \papercolumns 1
 \papersides 1
 \paperpagestyle fancy
+\listings_params "language=Python,breaklines=true,frame=tb,otherkeywords={self},emph={State},emphstyle={\ttb\color{darkred}},basicstyle={\ttfamily},commentstyle={\bfseries\color{commentgreen}\itshape},keywordstyle={\color{darkblue}},emphstyle={\color{red}},stringstyle={\color{red}}"
 \bullet 1 0 9 -1
 \bullet 2 0 24 -1
 \tracking_changes false
@@ -390,8 +394,17 @@ split
 Although the dataset is of a fixed size, there are methods to artificially
  grow the training images by performing image manipulations such as rotations
  and zooms.
- This attempts to teach the network to learn invariance to such transforms
- during classification.
+ This aims to teach the network invariance to such transforms during classificat
+ion.
+ A Python script was written to take a training dataset and perform a range
+ of manipulations in order to create a synthetically larger training set.
+ The expansion factor, 
+\begin_inset Formula $E$
+\end_inset
+
+, is used to described the scale factor for the new dataset's size.
+ The ideal rotation angle was investigated by rotating all images by a given
+ value.
 \end_layout
 
 \begin_layout Subsection
@@ -419,6 +432,19 @@ Network Architectures
 Convolutional Layers
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Little bit of context for investigations
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Fully-Connected Layers
 \end_layout
@@ -441,28 +467,17 @@ Following the convolutional stages there are three dense or fully-connected
  makes a classification.
 \end_layout
 
-\begin_layout Subsubsection
-Non-Linearity
-\end_layout
-
 \begin_layout Standard
-The inclusion of non-linear layers throughout AlexNet is critical to it's
- ability to learn complex insights into a dataset.
- Convolution as a mathematical operation can be proven to be associative
-\begin_inset Flex TODO Note (Margin)
+\begin_inset Flex TODO Note (inline)
 status open
 
 \begin_layout Plain Layout
-Fubini's theorem
+Trim?
 \end_layout
 
 \end_inset
 
- in a similar fashion to multiplication.
- This means that consecutive convolutions can be collapsed into a single
- operation, for example multiple filters can be merged into a single compound
- operation for less expensive application to an image.
- 
+
 \end_layout
 
 \begin_layout Section
@@ -662,7 +677,7 @@ name "fig:rot-256b"
 
 \begin_layout Plain Layout
 Test accuracies for different rotation degrees when augmenting the training
- set
+ set with fixed or dynamic batch size
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:rot-accuracy"
@@ -675,6 +690,125 @@ name "fig:rot-accuracy"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Test results for varied degrees of rotation when augmenting the training
+ data can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:rot-accuracy"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ In 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:rot-128b"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the batch size was set to 128, the default value and one used for the
+ unaugmented control experiment for comparison later.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:rot-256b"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ doubles the batch size to match the doubled training dataset, this means
+ that the same number of updates are made to the network's weights.
+ 
+\end_layout
+
+\begin_layout Standard
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:data-aug-best-barh"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ presents the test accuracies for different training pre-processing methods
+ including flipping the image horizontally and the best reported results
+ from the rotation experiment.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:data-aug-best-barh-128E"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ reports results with the previously described scaling of batch size with
+ training set size to maintain the number of network changes
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A batch size of 
+\begin_inset Formula $6\times128=768$
+\end_inset
+
+ for 
+\emph on
+full
+\emph default
+ processing could not fit into the memory of the test equipment and as such
+ a batch accumulation of 6 was used to simulate the larger batch size.
+ 
+\end_layout
+
+\end_inset
+
+.
+ 
+\emph on
+Full
+\emph default
+ pre-processing significantly expanded the training dataset by rotating
+ the image both clockwise and counter-clockwise by the given degrees and
+ then flipping both the rotated and original images for an expansion factor
+ of 6.
+ With the fixed batch size (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:data-aug-best-barh-fixed"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), augmenting the dataset more than the doubled the accuracy.
+ Rotation performed better than flipping the images while the described
+ combination performing best.
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Scaled batch size
 \end_layout
 
 \end_inset
@@ -714,6 +848,13 @@ status open
 
 \begin_layout Plain Layout
 Batch size = 128
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:data-aug-best-barh-fixed"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -751,6 +892,13 @@ Batch size =
 \end_inset
 
 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:data-aug-best-barh-128E"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -768,6 +916,7 @@ Batch size =
 
 \begin_layout Plain Layout
 Best top-1 and Top-5 test accuracies for different data augmentation methods
+ with fixed or dynamic batch size
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:data-aug-best-barh"
@@ -1004,6 +1153,32 @@ name "fig:step-down-accuracy"
 
 \end_layout
 
+\begin_layout Standard
+Test accuracies for different step-down learning schedule can be seen in
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:step-down-accuracy"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+Finish
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Exponential
 \end_layout
@@ -1146,6 +1321,45 @@ Sigmoid
 \end_layout
 
 \begin_layout Standard
+Values of gamma for the sigmoid function were selected such that the function
+ retained its characteristic profile.
+ As 
+\begin_inset Formula $\gamma\rightarrow0$
+\end_inset
+
+ the function begins to resemble a linear descent whereas as 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\gamma\rightarrow1$
+\end_inset
+
+ it tends towards a step action.
+ Values between 0.05 and 0.2 were evaluated and can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:sig-accuracy"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -1211,8 +1425,8 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Best top-1 and Top-5 test accuracies for different learning schedules over
- 100 epochs
+Best top-1 and Top-5 test accuracies for investigated learning schedules
+ over 100 epochs
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:lr-best-barh"
@@ -1225,6 +1439,19 @@ name "fig:lr-best-barh"
 \end_inset
 
 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+compare learning schedules
 \end_layout
 
 \end_inset
@@ -1283,6 +1510,19 @@ name "fig:kernel-accuracy"
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Fully-Connected Layers
 \end_layout
@@ -1331,6 +1571,139 @@ name "fig:fc-accuracy"
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Additional Layers
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/architecture-investigations/new-layer-kernel-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename ../cars/architecture-investigations/new-layer-filter-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Top-1 test accuracy for varied parameters of additional convolutional layers
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:new-layer"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/architecture-investigations/best-barh.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Best top-1 and Top-5 test accuracies for investigated architectures over
+ 100 epochs with exponentially decaying learning rate, 
+\begin_inset Formula $\lambda=0.98$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:architecture-best-barh"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Discussion
 \begin_inset CommandInset label
@@ -1347,15 +1720,50 @@ Dataset
 \end_layout
 
 \begin_layout Standard
-Although the 
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 Meta-Parameters
 \end_layout
 
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Network Architectures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1363,6 +1771,19 @@ Conclusions
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Conclusions"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex TODO Note (inline)
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
 
 \end_inset
 
@@ -1715,6 +2136,21 @@ name "tab:split-image-counts"
 
 
 \end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Training Set Expander Script
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand lstinputlisting
+filename "../data_aug.py"
+lstparams "caption={Python script for synthetically expanding a DIGITs training set},label={script:data_aug}"
 
 \end_inset
 
