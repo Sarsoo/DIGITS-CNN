@@ -46,7 +46,7 @@ todonotes
 \bibtex_command biber
 \index_command default
 \paperfontsize 11
-\spacing onehalf
+\spacing single
 \use_hyperref true
 \pdf_title "Convolutional Neural Networks with DIGITS"
 \pdf_author "Andy Pack"
@@ -97,7 +97,7 @@ todonotes
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation skip
-\defskip medskip
+\defskip smallskip
 \is_math_indent 0
 \math_numbering_side default
 \quotes_style british
@@ -392,8 +392,8 @@ split
 
 \begin_layout Standard
 Although the dataset is of a fixed size, there are methods to artificially
- grow the training images by performing image manipulations such as rotations
- and zooms.
+ expand the set of training data by performing image manipulations such
+ as rotations and zooms.
  This aims to teach the network invariance to such transforms during classificat
 ion.
  A Python script was written to take a training dataset and perform a range
@@ -412,16 +412,28 @@ Meta-Parameters
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Epochs/learning rate/momentum?
+The number of epochs that a network is trained for is important for balancing
+ the fit to the training set.
+ Too few and the CNN will be underfit whereas too many and the network will
+ be too specific to the training set.
 \end_layout
 
+\begin_layout Standard
+The learning rate of a CNN is critical for attaining high-performance results.
+ The value and how it changes over the range of training epochs or the 
+\emph on
+learning schedule
+\emph default
+ are investigated.
+ A fixed learning rate will first be evaluated before varying the parameter
+ as a function of epochs in the form of a sigmoid function, exponential
+ decay and a step-down schedule with a step, 
+\begin_inset Formula $S=33\%$
 \end_inset
 
-
+ for two steps at 1/3 and 2/3 of the total epochs.
+ These learning schedules were evaluated over 50 and 100 epochs to investigate
+ how this affects test accuracy.
 \end_layout
 
 \begin_layout Subsection
@@ -433,16 +445,10 @@ Convolutional Layers
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Little bit of context for investigations
-\end_layout
-
-\end_inset
-
-
+The convolutional layers of AlexNet are responsible for applying subsequent
+ image manipulations by convolving the sample with a kernel of learned parameter
+s.
+ The kernel size of each layer was varied in order visualise performance.
 \end_layout
 
 \begin_layout Subsubsection
@@ -458,26 +464,31 @@ Following the convolutional stages there are three dense or fully-connected
  The second is as a traditional multi-layer perceptron classifier, taking
  the high-level visual insights of the later convolutional layers and reasoning
  these into a final classification.
- When treated as an MLP, these can instead be considered as 2 hidden layers
- and a single output layer.
- The reason for designating the last layer separately is the level to which
- it is fixed when varying the classifier as a whole.
- The number of neurons in this layer remains equal to the number of classes
- in the dataset in order to form a one-hot vector output when the network
- makes a classification.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Trim?
+When treated as an MLP, these can instead be considered as 2 hidden layers
+ and a single output layer.
+ As the last layer is of a fixed number of nodes equal to the number of
+ classes and is required to form the one-hot vector output, it is treated
+ separately to the others.
+ Within this paper, when reporting the number of fully-connected layers
+ it is the number of hidden layers without the output layer.
 \end_layout
 
-\end_inset
+\begin_layout Subsection
+New Layers
+\end_layout
 
-
+\begin_layout Standard
+It has been shown that the early layers (~1-3) of AlexNet are responsible
+ for identifying low-level features such as edges while the latter layers
+ (~3-5) perform higher level reasoning including texture.
+ The addition of a new layer in both of these regions of the network were
+ investigated.
+ Reasonable values for kernel sizes and number of layers were selected consideri
+ng the values from the neighbouring layers.
 \end_layout
 
 \begin_layout Section
@@ -572,9 +583,9 @@ noprefix "false"
  A fixed learning rate of 0.001 was used over 100 epochs.
  Increasing the proportion of data reserved for training the model can be
  seen to increase the classification accuracy while varying the proportion
- between the test and validation split has little effect.
- The 80/10/10 split was deemed an appropriate balance in proportion and
- , unless otherwise stated, the 80/10/10 split is used for later experiments.
+ between the test and validation split had little effect.
+ The 80/10/10 split was deemed an appropriate balance of proportions and,
+ unless otherwise stated, the 80/10/10 split is used for later experiments.
 \end_layout
 
 \begin_layout Subsubsection
@@ -732,8 +743,7 @@ noprefix "false"
 
 \end_inset
 
- doubles the batch size to match the doubled training dataset, this means
- that the same number of updates are made to the network's weights.
+ doubles the batch size to match the doubled training dataset.
  
 \end_layout
 
@@ -762,7 +772,7 @@ noprefix "false"
 \end_inset
 
  reports results with the previously described scaling of batch size with
- training set size to maintain the number of network changes
+ training set size to maintain a constant number of network changes throughout
 \begin_inset Foot
 status open
 
@@ -814,6 +824,23 @@ Scaled batch size
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+With a constant number of network updates (figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:data-aug-best-barh-128E"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), data augmentation still performed better than the unaugmented dataset
+ however the performance was not as high as with a constant batch size.
+ Full processing performed worse than just flipping or rotating in this
+ case.
 \end_layout
 
 \begin_layout Standard
@@ -915,7 +942,7 @@ name "fig:data-aug-best-barh-128E"
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Best top-1 and Top-5 test accuracies for different data augmentation methods
+Best top-1 and top-5 test accuracies for different data augmentation methods
  with fixed or dynamic batch size
 \begin_inset CommandInset label
 LatexCommand label
@@ -941,6 +968,162 @@ Meta-Parameters
 \end_layout
 
 \begin_layout Subsubsection
+Epochs
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/epochs-accuracy.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:epochs-accuracy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/epochs-loss.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Final validation loss
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:epochs-loss"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test results for varied training epochs with a sigmoid learning rate decay
+ of 
+\begin_inset Formula $\gamma=0.1$
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:epochs-results"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The effect of varying the number of training epochs can be seen visualised
+ in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:epochs-results"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ More epochs can be seen to increase performance until ~70 epochs, after
+ this the accuracy gradually declines.
+ The opposite trend can be seen in the loss of figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:epochs-loss"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
 Fixed Learning Rate
 \end_layout
 
@@ -953,6 +1136,46 @@ status open
 \begin_layout Plain Layout
 \noindent
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/fixed-accuracy-50e.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+50 Epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:fixed-accuracy-50e"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -975,50 +1198,10 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Test accuracies
+100 Epochs
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:fixed-accuracy"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../cars/lr-investigations/fixed-loss.png
-	lyxscale 30
-	width 50col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Final validation loss
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:fixed-loss"
+name "fig:fixed-accuracy-100e"
 
 \end_inset
 
@@ -1039,7 +1222,7 @@ name "fig:fixed-loss"
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Fixed learning schedules results over 100 epochs
+Test accuracies for fixed learning schedules results
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:fixed-results"
@@ -1062,7 +1245,7 @@ name "fig:fixed-results"
 \begin_layout Standard
 In order to evaluate different learning rates and learning schedules, initial
  investigations were made across six decades of a fixed learning rate over
- 100 epochs.
+ 50 and 100 epochs.
  The accuracies and final validation loss can be seen in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1076,7 +1259,12 @@ noprefix "false"
 .
  For a fixed learning rate, values between 0.01 and 0.001 gave the best accuracy
  with values both larger or smaller giving a top-1 accuracy less than 10%.
- The final validation loss can be seen to generally follow the inverse trend,
+ The highest value between 50 and 100 epochs were similar.
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+The final validation loss can be seen to generally follow the inverse trend,
  the lowest values lie between 0.01 and 0.001.
  Interestingly, a learning rate of 
 \begin_inset Formula $1\times10^{-4}$
@@ -1105,11 +1293,57 @@ reword?
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Step-Down
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/step-down-accuracy-50e.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+50 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -1132,7 +1366,24 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Test accuracies for different step-down learning schedules over 100 epochs.
+100 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different step-down learning schedules.
  Step of 1/3 for 2 learning rate drops
 \begin_inset CommandInset label
 LatexCommand label
@@ -1166,6 +1417,8 @@ noprefix "false"
 \end_inset
 
 .
+ Over both 50 and 100 epochs, the step-down scale factor can be seen to
+ have little effect on test accuracy.
  
 \begin_inset Flex TODO Note (inline)
 status open
@@ -1197,7 +1450,8 @@ noprefix "false"
 
 .
  From these results, a slow decay rate can be seen to give the best results,
- values between 0.95 and 0.99 gave the highest accuracies.
+ values between 0.95 and 0.99 gave the highest accuracies, over both 50 and
+ 100 epochs.
 \end_layout
 
 \begin_layout Standard
@@ -1209,6 +1463,46 @@ status open
 \begin_layout Plain Layout
 \noindent
 \align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/exp-accuracy-50e.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+50 Epochs
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:exp-50e"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -1231,50 +1525,10 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Test accuracies
+100 Epochs
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:exp-accuracy"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename ../cars/lr-investigations/exp-loss.png
-	lyxscale 30
-	width 50col%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-Final validation loss
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:exp-loss"
+name "fig:exp-100e"
 
 \end_inset
 
@@ -1296,7 +1550,6 @@ name "fig:exp-loss"
 
 \begin_layout Plain Layout
 Test accuracies for different exponentially decaying learning schedules
- over 100 epochs
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:exp-results"
@@ -1321,13 +1574,7 @@ Sigmoid
 \end_layout
 
 \begin_layout Standard
-Values of gamma for the sigmoid function were selected such that the function
- retained its characteristic profile.
- As 
-\begin_inset Formula $\gamma\rightarrow0$
-\end_inset
-
- the function begins to resemble a linear descent whereas as 
+Reasonable values of gamma for the sigmoid function were selected 
 \family roman
 \series medium
 \shape up
@@ -1340,12 +1587,9 @@ Values of gamma for the sigmoid function were selected such that the function
 \uwave off
 \noun off
 \color none
-
-\begin_inset Formula $\gamma\rightarrow1$
-\end_inset
-
- it tends towards a step action.
- Values between 0.05 and 0.2 were evaluated and can be seen in figure 
+between 0.05 and 0.2.
+ Accuracies over 50 and 100 epochs were evaluated and can be seen in figure
+ 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:sig-accuracy"
@@ -1357,9 +1601,61 @@ noprefix "false"
 
 .
  
+\begin_inset Formula $\gamma$
+\end_inset
+
+ had little effect on performance for 50 epochs with an average top-1 accuracy
+ of 40%.
+ Over 100 epochs, the performance increased from this value to 47% when
+ 
+\begin_inset Formula $\gamma=0.05$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/sig-accuracy-50e.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+50 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -1382,7 +1678,24 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Test accuracies for different sigmoid learning schedules over 100 epochs
+100 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Test accuracies for different sigmoid learning schedules
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:sig-accuracy"
@@ -1402,7 +1715,71 @@ name "fig:sig-accuracy"
 
 \end_layout
 
+\begin_layout Subsubsection
+Summary
+\end_layout
+
 \begin_layout Standard
+A comparison of the best reported accuracies for the investigated learning
+ rate schedules can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:lr-best-barh"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Over both 50 and 100 epochs, a fixed learning rate performed the worst
+ while using a learning schedule achieved a ~10% accuracy gain.
+ Training for 100 epochs increased the accuracy by between 3% and 7% over
+ training for 50 epochs.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename ../cars/lr-investigations/best-barh-50e.png
+	lyxscale 30
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+50 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \begin_inset Float figure
 wide false
 sideways false
@@ -1414,7 +1791,24 @@ status open
 \begin_inset Graphics
 	filename ../cars/lr-investigations/best-barh.png
 	lyxscale 30
-	width 60col%
+	width 50col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+100 Epochs
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -1426,7 +1820,6 @@ status open
 
 \begin_layout Plain Layout
 Best top-1 and Top-5 test accuracies for investigated learning schedules
- over 100 epochs
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:lr-best-barh"
@@ -1439,19 +1832,6 @@ name "fig:lr-best-barh"
 \end_inset
 
 
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-compare learning schedules
 \end_layout
 
 \end_inset
@@ -1511,16 +1891,22 @@ name "fig:kernel-accuracy"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
+Test accuracies for varied convolutional kernel sizes can be seen in figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:kernel-accuracy"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-
+ with the standard kernel sizes for AlexNet also marked.
+ In general, varying the kernel size of the earlier layers (1 and 2) had
+ little effect on the accuracy with little gain made over the default.
+ Higher gains were made in the later layers, where a size of 5 or 7 tended
+ to perform better than the standard 3.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1572,16 +1958,22 @@ name "fig:fc-accuracy"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
+The shape and number of fully-connected layers were varied, test results
+ can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:fc-accuracy"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-
+, AlexNet's standard 2 hidden layers each of 4,096 nodes can be seen marked
+ for reference.
+ Each number of layers shows a peak with a steep ascent and a more gradual
+ descent, as the number of layers increases the nodes associated with the
+ peak also increases.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1605,21 +1997,13 @@ status open
 \end_inset
 
 
-\begin_inset Graphics
-	filename ../cars/architecture-investigations/new-layer-filter-accuracy.png
-	lyxscale 30
-	width 50col%
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Top-1 test accuracy for varied parameters of additional convolutional layers
+Top-1 test accuracy for varied kernel size of additional convolutional layers
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:new-layer"
@@ -1654,6 +2038,28 @@ TODO
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Summary
+\end_layout
+
+\begin_layout Standard
+A comparison of the best reported accuracies for the investigated architecture
+ changes can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:architecture-best-barh"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Each of the investigated architecture changes was able to outperform AlexNet.
+ The largest increase was achieved by reducing the number of nodes in the
+ 2 hidden dense layers from 4096 to 512 for a ~10% increase to 57%.
 \end_layout
 
 \begin_layout Standard
@@ -1720,16 +2126,16 @@ Dataset
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+The batch size scaling inline with the training set growth was conducted
+ in an effort to control for the amount of extra training being conducted.
+ When comparing data augmentation methods, difficulty comes in comparing
+ processing methods which expand the training set by different amounts.
+ Synthetically larger datasets not only present the network with new perspective
+s of the image but also train the network for longer.
+ A method to better control for this in the future could be to define a
+ constant expansion factor across processing methods and then compose this
+ extra training data of different proportions of augmentations (rotations
+ of varying angles and flips).
 \end_layout
 
 \begin_layout Subsection
@@ -1737,16 +2143,9 @@ Meta-Parameters
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+As presented, it can be seen that training a network beyond a threshold
+ number of epochs leads to diminishing performance as the network overfits
+ to the training set.
 \end_layout
 
 \begin_layout Subsection
@@ -1754,16 +2153,15 @@ Network Architectures
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
+From the reported results each investigation outperformed the standard AlexNet
+ architecture.
+ It is worth specifying the significance of this, however.
+ It would be inaccurate from these results to suggest that these derivative
+ architectures are better than AlexNet as the performance is a function
+ of the dataset, the specific dataset split used, the learning rate schedule
+ and number of epochs trained for.
+ Instead what is being stated is that, for the selected, specific values
+ of those, a more optimal architecture than the standard AlexNet was found.
 \end_layout
 
 \begin_layout Section
@@ -1771,19 +2169,6 @@ Conclusions
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Conclusions"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
 
 \end_inset
 
