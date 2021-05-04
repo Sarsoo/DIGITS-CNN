@@ -185,7 +185,26 @@ University of Surrey
 \end_layout
 
 \begin_layout Abstract
-abstract
+Investigations are made into 3 broad influences on a convolutional neural
+ network's performance including the subject dataset, hyper-parameters and
+ architecture.
+ These investigations were conducted using the Stanford Cars dataset and
+ the seminal AlexNet architecture.
+ The proportions of dataset dedicated to training, validation and testing
+ were varied with higher accuracy obtained by heavily biasing towards testing.
+ Offline data augmentation was investigated by expanding the training dataset
+ using rotations and horizontal flips.
+ This significantly increased performance.
+ A peak in accuracy was identified when varying the number of epochs with
+ overfitting occuring beyond this critical epoch value.
+ Various learning rate schedules were investigated with dynamic learning
+ rates throughout the training period far out-performing a fixed learning
+ rate.
+ Finally, the architecture of the network was investigated by varying the
+ dimensions of the final dense layers, the kernel size of the convoluional
+ layers and by including new layers.
+ All of these investigations were able to report higher accuracy than the
+ standard AlexNet.
 \end_layout
 
 \begin_layout Standard
@@ -194,10 +213,6 @@ LatexCommand tableofcontents
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout List of TODOs
 
 \end_layout
 
@@ -282,18 +297,16 @@ Introduction
 \begin_layout Standard
 Although much of the theory for convolutional neural networks (CNNs) was
  developed throughout the 20th century, their importance to the field of
- computer vision was not widely appreciated until the early 2010s.
- 
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-More context
-\end_layout
+ computer vision was not widely appreciated until the early 2010s 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alexnet"
+literal "false"
 
 \end_inset
 
-
+.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -381,7 +394,16 @@ Prior to more in-depth investigations, how the dataset is divided into training,
  validation and test data was investigated in order to identify a suitable
  proportion for later work.
  As a fixed size dataset, a balance must be struck between how much is reserved
- for training the network and how much should be used to evaluate the network.
+ for training the network and how much should be used to evaluate the network
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "glassbox-train-props"
+literal "false"
+
+\end_inset
+
+.
  Throughout this paper, the term 
 \emph on
 split
@@ -393,7 +415,15 @@ split
 \begin_layout Standard
 Although the dataset is of a fixed size, there are methods to artificially
  expand the set of training data by performing image manipulations such
- as rotations and zooms.
+ as rotations and zooms 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tds-alexnet,learnopencv-alexnet"
+literal "false"
+
+\end_inset
+
+.
  This aims to teach the network invariance to such transforms during classificat
 ion.
  A Python script was written to take a training dataset and perform a range
@@ -414,12 +444,21 @@ Meta-Parameters
 \begin_layout Standard
 The number of epochs that a network is trained for is important for balancing
  the fit to the training set.
- Too few and the CNN will be underfit whereas too many and the network will
- be too specific to the training set.
+ Too few and the CNN will be underfitted whereas too many and the network
+ will be too specific to the training set.
 \end_layout
 
 \begin_layout Standard
-The learning rate of a CNN is critical for attaining high-performance results.
+The learning rate of a CNN is critical for attaining high-performance results
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tds-lr-schedules"
+literal "false"
+
+\end_inset
+
+.
  The value and how it changes over the range of training epochs or the 
 \emph on
 learning schedule
@@ -447,7 +486,15 @@ Convolutional Layers
 \begin_layout Standard
 The convolutional layers of AlexNet are responsible for applying subsequent
  image manipulations by convolving the sample with a kernel of learned parameter
-s.
+s 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cmabridge-cnns"
+literal "false"
+
+\end_inset
+
+.
  The kernel size of each layer was varied in order visualise performance.
 \end_layout
 
@@ -463,13 +510,21 @@ Following the convolutional stages there are three dense or fully-connected
  output.
  The second is as a traditional multi-layer perceptron classifier, taking
  the high-level visual insights of the later convolutional layers and reasoning
- these into a final classification.
+ these into a final classification 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "learnopencv-alexnet"
+literal "false"
+
+\end_inset
+
+.
  
 \end_layout
 
 \begin_layout Standard
 When treated as an MLP, these can instead be considered as 2 hidden layers
- and a single output layer.
+ and a single output layer for AlexNet.
  As the last layer is of a fixed number of nodes equal to the number of
  classes and is required to form the one-hot vector output, it is treated
  separately to the others.
@@ -482,10 +537,18 @@ New Layers
 \end_layout
 
 \begin_layout Standard
-It has been shown that the early layers (~1-3) of AlexNet are responsible
- for identifying low-level features such as edges while the latter layers
- (~3-5) perform higher level reasoning including texture.
- The addition of a new layer in both of these regions of the network were
+It has been shown that the early layers (~1-3 in AlexNet) of CNNs are responsibl
+e for identifying low-level features such as edges while the latter layers
+ (~3-5) perform higher level reasoning including texture 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "cmabridge-cnns"
+literal "false"
+
+\end_inset
+
+.
+ The addition of a new layer in both of these regions of the network was
  investigated.
  Reasonable values for kernel sizes and number of layers were selected consideri
 ng the values from the neighbouring layers.
@@ -732,7 +795,7 @@ noprefix "false"
 \end_inset
 
 , the batch size was set to 128, the default value and one used for the
- unaugmented control experiment for comparison later.
+ unaugmented experiment for comparison later.
  Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -811,19 +874,13 @@ noprefix "false"
 
 \end_inset
 
-), augmenting the dataset more than the doubled the accuracy.
+), augmenting the dataset more than doubled the accuracy.
  Rotation performed better than flipping the images while the described
+ 
+\emph on
+full
+\emph default
  combination performing best.
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Scaled batch size
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -839,8 +896,8 @@ noprefix "false"
 
 ), data augmentation still performed better than the unaugmented dataset
  however the performance was not as high as with a constant batch size.
- Full processing performed worse than just flipping or rotating in this
- case.
+ Full processing performed worse than either flipping or rotating in this
+ case but still performed better than the unaugmented control.
 \end_layout
 
 \begin_layout Standard
@@ -1108,8 +1165,8 @@ noprefix "false"
 \end_inset
 
 .
- More epochs can be seen to increase performance until ~70 epochs, after
- this the accuracy gradually declines.
+ More epochs can be seen to dramatically increase performance until ~70
+ epochs, after this the accuracy gradually declines.
  The opposite trend can be seen in the loss of figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1259,7 +1316,8 @@ noprefix "false"
 .
  For a fixed learning rate, values between 0.01 and 0.001 gave the best accuracy
  with values both larger or smaller giving a top-1 accuracy less than 10%.
- The highest value between 50 and 100 epochs were similar.
+ The highest value between 50 and 100 epochs were comparable at around 33%
+ and 35% respectively.
 \begin_inset Note Comment
 status open
 
@@ -1419,17 +1477,6 @@ noprefix "false"
 .
  Over both 50 and 100 epochs, the step-down scale factor can be seen to
  have little effect on test accuracy.
- 
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-Finish
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
@@ -1450,8 +1497,13 @@ noprefix "false"
 
 .
  From these results, a slow decay rate can be seen to give the best results,
- values between 0.95 and 0.99 gave the highest accuracies, over both 50 and
- 100 epochs.
+ values between 0.95 and 0.99 gave the highest accuracies over both training
+ periods.
+ Over 50 epochs, the performance drops faster than over 100 epochs as 
+\begin_inset Formula $\lambda$
+\end_inset
+
+ decreases.
 \end_layout
 
 \begin_layout Standard
@@ -1574,7 +1626,7 @@ Sigmoid
 \end_layout
 
 \begin_layout Standard
-Reasonable values of gamma for the sigmoid function were selected 
+Reasonable values of gamma for the sigmoid function were selected
 \family roman
 \series medium
 \shape up
@@ -1587,7 +1639,11 @@ Reasonable values of gamma for the sigmoid function were selected
 \uwave off
 \noun off
 \color none
-between 0.05 and 0.2.
+ up to 0.4, as 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ increases beyond 0.5 the profile tends towards a step action.
  Accuracies over 50 and 100 epochs were evaluated and can be seen in figure
  
 \begin_inset CommandInset ref
@@ -1903,10 +1959,15 @@ noprefix "false"
 \end_inset
 
  with the standard kernel sizes for AlexNet also marked.
+ Only one kernel size was changed at a time, the network is a standard AlexNet
+ apart from the subject layer.
  In general, varying the kernel size of the earlier layers (1 and 2) had
- little effect on the accuracy with little gain made over the default.
+ little benefit on the accuracy, a kernel size of 3 for layer 1 performed
+ particularly bad with a ~7% lower accuracy.
  Higher gains were made in the later layers, where a size of 5 or 7 tended
  to perform better than the standard 3.
+ Layer 3 showed both the highest gain with a +6% from the original 3x3 to
+ 5x5 and the highest loss with -10% from 3x3 to 11x11.
 \end_layout
 
 \begin_layout Subsubsection
@@ -1974,6 +2035,7 @@ noprefix "false"
  Each number of layers shows a peak with a steep ascent and a more gradual
  descent, as the number of layers increases the nodes associated with the
  peak also increases.
+ The highest performance was for the standard 2 layers with 512 nodes.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2018,26 +2080,29 @@ name "fig:new-layer"
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Flex TODO Note (inline)
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
+Test accuracies for varied kernel sizes in additional convolutional layers
+ can be seen in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:new-layer"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-
+.
+ A fixed number of filters was selected to interpolate the values of neighouring
+ layers.
+ A new layer between conv 1 and conv 2, layer 1.5, performed best with a
+ 3x3 kernel (54%), increasing the size resulted in decreased accuracy.
+ For layer 3.5, a 5x5 kernel performed best for a top-1 accuracy of 52%.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2046,7 +2111,7 @@ Summary
 
 \begin_layout Standard
 A comparison of the best reported accuracies for the investigated architecture
- changes can be seen in figure 
+ alterations can be seen in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:architecture-best-barh"
@@ -2059,7 +2124,7 @@ noprefix "false"
 .
  Each of the investigated architecture changes was able to outperform AlexNet.
  The largest increase was achieved by reducing the number of nodes in the
- 2 hidden dense layers from 4096 to 512 for a ~10% increase to 57%.
+ 2 hidden dense layers from 4,096 to 512 for a ~10% increase to 57%.
 \end_layout
 
 \begin_layout Standard
@@ -2126,16 +2191,69 @@ Dataset
 \end_layout
 
 \begin_layout Standard
+A high training proportion was found to increase the accuracy of the network.
+ This is for two major reasons.
+ Increasing the number of images for training effectively increases the
+ length of training as more images are progagated each epoch.
+ Alongside this, increasing the training proportion also provides a more
+ complete view of the dataset.
+ Higher proportions will allow the network to see more of each class, with
+ a significantly lower proportion it would be possible that few if any of
+ a class is present in the training dataset.
+ The same can be argued for the test sets, however.
+ As the test set is reduced in complement to the training set's increase,
+ the breadth of qualities being evaluated is reduced as the number of examples
+ of each class is reduced.
+ This is the core of the balancing act in conducting both comprehensive
+ training and testing.
+\end_layout
+
+\begin_layout Standard
+Offline augmentation of the training data proved to be an effective way
+ of increasing the accuracy of the evaluated networks.
+ When using rotation, small angles were the most effective, in practice
+ a random angle between 0 and 10 could be used.
+ Data augmentation increases performance as it presents the network with
+ different perspectives of the same images.
+ As such, the network can learn invariance to factors such as which way
+ the car is facing in the image.
+\end_layout
+
+\begin_layout Standard
 The batch size scaling inline with the training set growth was conducted
  in an effort to control for the amount of extra training being conducted.
  When comparing data augmentation methods, difficulty comes in comparing
  processing methods which expand the training set by different amounts.
  Synthetically larger datasets not only present the network with new perspective
-s of the image but also train the network for longer.
- A method to better control for this in the future could be to define a
- constant expansion factor across processing methods and then compose this
- extra training data of different proportions of augmentations (rotations
- of varying angles and flips).
+s of the images but also train the network for longer and as such it is
+ hard to define how much should be attributed to the 
+\emph on
+quality
+\emph default
+ of the synthetic data.
+ Scaling the batch size so as to maintain the number of network updates
+ reduced the accuracy as would be expected when attempting to control for
+ more training, however the full processing (
+\begin_inset Formula $E=6$
+\end_inset
+
+) was reduced further than the 
+\begin_inset Formula $E=2$
+\end_inset
+
+ processing methods.
+ This does not follow the hypothesis as it might be expected that more perspecti
+ves of the training data would improve over a single rotation or flip.
+ This suggests that scaling the batch size as described was not a sufficient
+ method to control for the longer training periods.
+\end_layout
+
+\begin_layout Standard
+A method to better control for this in the future could be to define a constant
+ expansion factor across processing methods and then compose this extra
+ training data of different proportions of augmentations (rotations of varying
+ angles and flips) or to use online augmentation such that the images are
+ manipulated as they are presented to the network.
 \end_layout
 
 \begin_layout Subsection
@@ -2146,6 +2264,30 @@ Meta-Parameters
 As presented, it can be seen that training a network beyond a threshold
  number of epochs leads to diminishing performance as the network overfits
  to the training set.
+ This reduces the network's ability to generalise as it effectively learns
+ 
+\emph on
+too much
+\emph default
+ about the training data.
+\end_layout
+
+\begin_layout Standard
+From the comparisons of different learning rate schedules, it can be seen
+ from the similar performances that the employed specific function was not
+ as important as the need to decay the learning rate itself.
+ This is demonstrated in the 10% performance gain when using a dynamic learning
+ rate.
+ Considering the error surface with local minima that the weight set is
+ navigating, initially it is important to make large steps across the surface.
+ Towards the end of the training period, however, ideally the network will
+ be close to or within a minima.
+ At this point, large steps will reduce the performance of the network as
+ oscillating jumps over the minima are made instead of settling within.
+ By decaying the learning rate, both intentions can be actioned, initially
+ taking large steps to find the deepest possible minimum before reducing
+ the size of the movements in order to converge into it as opposed to circling
+ it.
 \end_layout
 
 \begin_layout Subsection
@@ -2159,9 +2301,28 @@ From the reported results each investigation outperformed the standard AlexNet
  It would be inaccurate from these results to suggest that these derivative
  architectures are better than AlexNet as the performance is a function
  of the dataset, the specific dataset split used, the learning rate schedule
- and number of epochs trained for.
- Instead what is being stated is that, for the selected, specific values
- of those, a more optimal architecture than the standard AlexNet was found.
+ and number of training epochs.
+ Instead what is being stated is that, for the specific values of those,
+ a more optimal architecture than the standard AlexNet was found.
+\end_layout
+
+\begin_layout Standard
+Looking to the dense layer shape investigations, each number of layers has
+ a similar profile in the described steep rise and gradual descent.
+ As the number of layers increases, the number of hidden nodes required
+ to achieve the same performance increases.
+ This implies a required relation between the dimensions of the dense layers
+ to attain acceptable performance as both a deep MLP section of few nodes
+ and a shallow MLP of many nodes will not be sufficient.
+\end_layout
+
+\begin_layout Standard
+The higher increase in performance by adding layer 1.5 than 3.5 would suggest
+ that more low-level feature learning capacity was more effective for the
+ dataset than higher-level capacity.
+ Both were higher than the best reported accuracy from varying AlexNet's
+ kernel sizes which would suggest that the existing convolutional stages
+ were well suited to the dataset as standard.
 \end_layout
 
 \begin_layout Section
@@ -2173,6 +2334,31 @@ name "sec:Conclusions"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Investigations into the factors affecting convolutional neural network have
+ been presented.
+ The effect of balancing the proportion of data to be partitioned between
+ training and testing was investigated.
+ Increasing the amount of training data as much as possible was shown to
+ increase the accuracy.
+ Offline data augmentation using a selection of image rotations and flips
+ was shown to more than double the test accuracy.
+ 
+\end_layout
+
+\begin_layout Standard
+A dynamic learning rate schedule was shown to be important in achieving
+ high-performance accuracy as opposed to a fixed value.
+ The choice of decay function did not significantly affect the best reported
+ accuracy.
+\end_layout
+
+\begin_layout Standard
+Derivative architectures of AlexNet were shown to increase performance when
+ altering the dense layers shape, the convolutional kernel sizes and when
+ including additional convolutional layers.
 \end_layout
 
 \begin_layout Standard
